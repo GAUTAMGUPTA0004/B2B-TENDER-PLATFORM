@@ -22,10 +22,10 @@ export const register = async (req: Request, res: Response): Promise<Response | 
       password: hashedPassword
     });
 
-    // Create token with the new user's ID
+    // FIXED: Create token with the new user's ID (not User.id which is undefined)
     const token = jwt.sign({ id: newUser.id }, SECRET, { expiresIn: '1d' });
     
-    return res.status(201).json({ 
+    res.status(201).json({ 
       token,
       user: {
         id: newUser.id,
@@ -34,7 +34,7 @@ export const register = async (req: Request, res: Response): Promise<Response | 
     });
   } catch (err) {
     console.error('Registration error:', err);
-    return res.status(500).json({ message: 'Registration failed', error: err });
+    res.status(500).json({ message: 'Registration failed', error: err });
   }
 };
 
@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
     if (!match) return res.status(400).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user.id }, SECRET, { expiresIn: '1d' });
-    return res.status(200).json({ 
+    res.status(200).json({ 
       token,
       user: {
         id: user.id,
@@ -57,6 +57,6 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
     });
   } catch (err) {
     console.error('Login error:', err);
-    return res.status(500).json({ message: 'Login failed', error: err });
+     res.status(500).json({ message: 'Login failed', error: err });
   }
 };

@@ -7,7 +7,7 @@ interface AuthRequest extends Request {
   user?: any;
 }
 
-export const authenticateToken = (
+ export const authenticateToken = (
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -28,3 +28,4 @@ export const authenticateToken = (
     next();
   });
 };
+
