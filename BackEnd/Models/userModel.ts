@@ -1,12 +1,10 @@
-
-import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize';
+import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import sequelize from '../utils/db';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: number;
+  declare id: CreationOptional<number>;
   declare email: string;
   declare password: string;
-    static id: number;
 }
 
 User.init(
@@ -30,7 +28,7 @@ User.init(
     sequelize,
     modelName: 'User',
     tableName: 'users',
-    timestamps: false,
+    timestamps: true,
   }
 );
 
