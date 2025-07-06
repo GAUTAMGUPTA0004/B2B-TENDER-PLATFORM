@@ -5,13 +5,22 @@ import User from '../Models/userModel';
 
 const SECRET = process.env.JWT_SECRET as string;
 
-export const register = async (req: Request, res: Response): Promise<Response | void> => {
+export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
     
+    // Validate input
+    if (!email || !password) {
+      res.status(400).json({ message: 'Email and password are required' });
+      return;
+    }
+    
     // Check if user already exists
     const userExists = await User.findOne({ where: { email } });
-    if (userExists) return res.status(400).json({ message: 'User already exists' });
+    if (userExists) {
+      res.status(400).json({ message: 'User already exists' });
+      return;
+    }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -22,7 +31,7 @@ export const register = async (req: Request, res: Response): Promise<Response | 
       password: hashedPassword
     });
 
-    // FIXED: Create token with the new user's ID (not User.id which is undefined)
+    // Create token with the new user's ID
     const token = jwt.sign({ id: newUser.id }, SECRET, { expiresIn: '1d' });
     
     res.status(201).json({ 
@@ -38,16 +47,33 @@ export const register = async (req: Request, res: Response): Promise<Response | 
   }
 };
 
-export const login = async (req: Request, res: Response): Promise<Response | void> => {
+export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
+    
+    // Validate input
+    if (!email || !password) {
+      res.status(400).json({ message: 'Email and password are required' });
+      return;
+    }
+    
+    // Find user by email
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!user) {
+      res.status(400).json({ message: 'Invalid credentials' });
+      return;
+    }
 
+    // Check password
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!match) {
+      res.status(400).json({ message: 'Invalid credentials' });
+      return;
+    }
 
+    // Generate token
     const token = jwt.sign({ id: user.id }, SECRET, { expiresIn: '1d' });
+    
     res.status(200).json({ 
       token,
       user: {
@@ -57,6 +83,6 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
     });
   } catch (err) {
     console.error('Login error:', err);
-     res.status(500).json({ message: 'Login failed', error: err });
+    res.status(500).json({ message: 'Login failed', error: err });
   }
 };

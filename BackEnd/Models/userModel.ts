@@ -5,6 +5,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
   declare email: string;
   declare password: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
 User.init(
@@ -23,6 +25,8 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    createdAt: '',
+    updatedAt: ''
   },
   {
     sequelize,
@@ -31,6 +35,5 @@ User.init(
     timestamps: true,
   }
 );
-
 
 export default User;

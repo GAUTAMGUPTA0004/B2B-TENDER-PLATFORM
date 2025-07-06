@@ -1,17 +1,15 @@
 import Tender from '../Models/tenderModel';
 import { Request, Response } from 'express';
+import { AuthRequest } from '../Middleware/AuthMiddleware';
 
-interface AuthenticatedRequest extends Request {
-  user?: { id: number };
-}
-
-export const createTender = async (req: AuthenticatedRequest, res: Response) => {
+export const createTender = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     console.log('Creating tender with data:', req.body);
     console.log('User ID from token:', req.user?.id);
     
     if (!req.user?.id) {
-      return res.status(401).json({ message: 'User not authenticated' });
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
     }
 
     // Note: You might want to get the user's company ID instead of using user ID directly
@@ -29,7 +27,7 @@ export const createTender = async (req: AuthenticatedRequest, res: Response) => 
   }
 };
 
-export const getTenders = async (_req: Request, res: Response) => {
+export const getTenders = async (_req: Request, res: Response): Promise<void> => {
   try {
     const tenders = await Tender.findAll();
     res.status(200).json(tenders);

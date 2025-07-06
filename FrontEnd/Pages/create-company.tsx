@@ -26,12 +26,12 @@ export default function CreateCompany() {
         return;
       }
 
-      // For now, let's skip file upload and just create company with text data
+      
       const body = {
         name: form.name,
         industry: form.industry,
         description: form.description,
-        logoUrl: '', // We'll implement file upload later
+        logoUrl: '', 
       };
 
       await axios.post('http://localhost:5000/api/company', body, {

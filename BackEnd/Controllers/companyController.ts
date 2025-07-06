@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 import Company from '../Models/companyModel';
+import { AuthRequest } from '../Middleware/AuthMiddleware';
 
-interface AuthenticatedRequest extends Request {
-  user?: { id: number };
-}
-
-export const createCompany = async (req: AuthenticatedRequest, res: Response) => {
+export const createCompany = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     console.log('Creating company with data:', req.body);
     console.log('User ID from token:', req.user?.id);
     
     if (!req.user?.id) {
-      return res.status(401).json({ message: 'User not authenticated' });
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
     }
 
     const company = await Company.create({ 
@@ -27,7 +25,7 @@ export const createCompany = async (req: AuthenticatedRequest, res: Response) =>
   }
 };
 
-export const getCompanies = async (_req: Request, res: Response) => {
+export const getCompanies = async (_req: Request, res: Response): Promise<void> => {
   try {
     const companies = await Company.findAll();
     res.status(200).json(companies);
