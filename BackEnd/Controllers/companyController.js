@@ -1,27 +1,38 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCompanies = exports.createCompany = void 0;
-const companyModel_1 = __importDefault(require("../Models/companyModel"));
+const Company = require('../Models/companyModel');
+
 const createCompany = async (req, res) => {
-    try {
-        const company = await companyModel_1.default.create(Object.assign(Object.assign({}, req.body), { userId: req.user.id }));
-        res.status(201).json(company);
+  try {
+    console.log('Creating company with data:', req.body);
+    console.log('User ID from token:', req.user?.id);
+    
+    if (!req.user?.id) {
+      return res.status(401).json({ message: 'User not authenticated' });
     }
-    catch (err) {
-        res.status(500).json({ message: 'Company creation failed', error: err });
-    }
+
+    const company = await Company.create({ 
+      ...req.body, 
+      userId: req.user.id 
+    });
+    
+    console.log('Company created successfully:', company);
+    res.status(201).json(company);
+  } catch (err) {
+    console.error('Company creation error:', err);
+    res.status(500).json({ message: 'Company creation failed', error: err.message });
+  }
 };
-exports.createCompany = createCompany;
-const getCompanies = async (_req, res) => {
-    try {
-        const companies = await companyModel_1.default.findAll();
-        res.status(200).json(companies);
-    }
-    catch (err) {
-        res.status(500).json({ message: 'Failed to fetch companies', error: err });
-    }
+
+const getCompanies = async (req, res) => {
+  try {
+    const companies = await Company.findAll();
+    res.status(200).json(companies);
+  } catch (err) {
+    console.error('Get companies error:', err);
+    res.status(500).json({ message: 'Failed to fetch companies', error: err.message });
+  }
 };
-exports.getCompanies = getCompanies;
+
+module.exports = {
+  createCompany,
+  getCompanies
+};

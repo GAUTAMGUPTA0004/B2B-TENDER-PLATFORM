@@ -1,16 +1,20 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../utils/db"));
-const sequelize_1 = require("sequelize");
-const Company = db_1.default.define('Company', {
-    id: { type: sequelize_1.DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    name: { type: sequelize_1.DataTypes.STRING, allowNull: false },
-    industry: { type: sequelize_1.DataTypes.STRING },
-    description: { type: sequelize_1.DataTypes.TEXT },
-    logoUrl: { type: sequelize_1.DataTypes.STRING },
-    userId: { type: sequelize_1.DataTypes.INTEGER, allowNull: false },
+const sequelize = require("../utils/db");
+const { DataTypes } = require('sequelize');
+
+const Company = sequelize.define('Company', {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  name: { type: DataTypes.STRING, allowNull: false },
+  industry: { type: DataTypes.STRING },
+  description: { type: DataTypes.TEXT },
+  logoUrl: { type: DataTypes.STRING },
+  userId: { 
+    type: DataTypes.INTEGER, 
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  },
 });
-exports.default = Company;
+
+module.exports = Company;

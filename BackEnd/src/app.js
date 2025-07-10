@@ -1,28 +1,47 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const body_parser_1 = __importDefault(require("body-parser"));
-const cors_1 = __importDefault(require("cors"));
+const passport = require('../config/passport');
+require('dotenv').config();
+
+// Import associations to establish relationships
+// Import associations to establish relationships
+require('../Models/associations').default;
+
 // Route imports
-const auth_1 = __importDefault(require("../Routes/auth"));
-const company_1 = __importDefault(require("../Routes/company"));
-const tender_1 = __importDefault(require("../Routes/tender"));
-const application_1 = __importDefault(require("../Routes/application"));
-const search_1 = __importDefault(require("../Routes/search"));
-const app = (0, express_1.default)();
+const authRoutes = require('../Routes/auth');
+const companyRoutes = require('../Routes/company');
+const tenderRoutes = require('../Routes/tender');
+const applicationRoutes = require('../Routes/application');
+const searchRoutes = require('../Routes/search');
+
+const app = express();
+
 // Middlewares
-app.use((0, cors_1.default)());
-app.use(body_parser_1.default.json());
+app.use(cors());
+app.use(bodyParser.json());
+
+// Session configuration for Passport
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true in production with HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Mount routes
-app.use('/api/auth', auth_1.default);
-app.use('/api/company', company_1.default);
-app.use('/api/tender', tender_1.default);
-app.use('/api/application', application_1.default);
-app.use('/api/search', search_1.default);
-app.get('/', (_req, res) => {
-    res.send('API is running...');
+app.use('/api/auth', authRoutes);
+app.use('/api/company', companyRoutes);
+app.use('/api/tender', tenderRoutes);
+app.use('/api/application', applicationRoutes);
+app.use('/api/search', searchRoutes);
+
+app.get('/', (req, res) => {
+  res.send('API is running...');
 });
-exports.default = app;
+
+module.exports = app;
