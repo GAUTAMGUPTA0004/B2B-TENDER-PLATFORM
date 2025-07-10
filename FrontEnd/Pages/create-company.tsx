@@ -14,10 +14,26 @@ export default function CreateCompany() {
     description: '',
     logoFile: null,
   });
+  const [uploading, setUploading] = useState(false);
   const router = useRouter();
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('logo', file);
+    
+    const response = await axios.post('http://localhost:5000/api/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data.url; // Assuming your backend returns { url: 'path/to/image' }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
+    
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -26,12 +42,23 @@ export default function CreateCompany() {
         return;
       }
 
+      let logoUrl = '';
       
+      // Upload image if provided
+      if (form.logoFile) {
+        try {
+          logoUrl = await uploadImage(form.logoFile);
+        } catch (uploadError) {
+          console.error('Image upload failed:', uploadError);
+          alert('Image upload failed, but company will be created without logo');
+        }
+      }
+
       const body = {
         name: form.name,
         industry: form.industry,
         description: form.description,
-        logoUrl: '', 
+        logoUrl: logoUrl,
       };
 
       await axios.post('http://localhost:5000/api/company', body, {
@@ -43,6 +70,8 @@ export default function CreateCompany() {
     } catch (err) {
       console.error(err);
       alert('Creation failed');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -76,20 +105,31 @@ export default function CreateCompany() {
           onChange={e => setForm({ ...form, description: e.target.value })}
         />
         
-        <input
-          type="file"
-          accept="image/*"
-          className="border p-3 w-full mb-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setForm({ ...form, logoFile: e.target.files?.[0] || null })
-          }
-        />
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Company Logo
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setForm({ ...form, logoFile: e.target.files?.[0] || null })
+            }
+          />
+          {form.logoFile && (
+            <p className="text-sm text-gray-600 mt-1">
+              Selected: {form.logoFile.name}
+            </p>
+          )}
+        </div>
         
         <button 
           type="submit" 
-          className="bg-blue-600 text-white py-3 px-6 w-full rounded hover:bg-blue-700 transition-colors"
+          disabled={uploading}
+          className="bg-blue-600 text-white py-3 px-6 w-full rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
         >
-          Create Company
+          {uploading ? 'Creating...' : 'Create Company'}
         </button>
       </form>
     </div>
