@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import TenderCard from '../Components/TenderCard';
+import TenderCard from '../components/TenderCard';
 
 export default function Tenders() {
   const [tenders, setTenders] = useState([]);

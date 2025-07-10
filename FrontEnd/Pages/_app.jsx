@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import Layout from '../Components/Layout';
+import Layout from '../components/Layout';
 import '../Styles/globals.css';
 
 export default function App({ Component, pageProps }) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import CompanyCard from '../Components/CompanyCard';
+import CompanyCard from '../components/CompanyCard';
 
 export default function Dashboard() {
   const [companies, setCompanies] = useState([]);
