@@ -2,21 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import TenderCard from '../Components/TenderCard';
 
-interface Tender {
-  id: string;
-  title: string;
-  description: string;
-  deadline: string;
-  budget: number;
-  company?: {
-    name: string;
-    logoUrl?: string;
-    industry: string;
-  };
-}
-
 export default function Tenders() {
-  const [tenders, setTenders] = useState<Tender[]>([]);
+  const [tenders, setTenders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

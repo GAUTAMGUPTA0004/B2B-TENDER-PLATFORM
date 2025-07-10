@@ -3,16 +3,8 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import CompanyCard from '../Components/CompanyCard';
 
-interface Company {
-  id: string;
-  name: string;
-  industry: string;
-  description: string;
-  logoUrl?: string;
-}
-
 export default function Dashboard() {
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 

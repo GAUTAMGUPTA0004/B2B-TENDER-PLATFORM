@@ -3,12 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 
 export default function CreateCompany() {
-  const [form, setForm] = useState<{
-    name: string;
-    industry: string;
-    description: string;
-    logoFile: File | null;
-  }>({
+  const [form, setForm] = useState({
     name: '',
     industry: '',
     description: '',
@@ -17,7 +12,7 @@ export default function CreateCompany() {
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
-  const uploadImage = async (file: File): Promise<string> => {
+  const uploadImage = async (file) => {
     const formData = new FormData();
     formData.append('logo', file);
     
@@ -30,7 +25,7 @@ export default function CreateCompany() {
     return response.data.url; // Assuming your backend returns { url: 'path/to/image' }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
     
@@ -113,7 +108,7 @@ export default function CreateCompany() {
             type="file"
             accept="image/*"
             className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e) =>
               setForm({ ...form, logoFile: e.target.files?.[0] || null })
             }
           />

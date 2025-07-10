@@ -1,13 +1,3 @@
-type TenderProps = {
-  title: string;
-  description: string;
-  deadline: string;
-  budget: number;
-  companyName?: string;
-  companyLogo?: string;
-  companyIndustry?: string;
-};
-
 export default function TenderCard({ 
   title, 
   description, 
@@ -16,7 +6,7 @@ export default function TenderCard({
   companyName, 
   companyLogo, 
   companyIndustry 
-}: TenderProps) {
+}) {
   return (
     <div className="border p-6 rounded-lg shadow-md bg-white mb-4">
       <div className="flex justify-between items-start mb-4">

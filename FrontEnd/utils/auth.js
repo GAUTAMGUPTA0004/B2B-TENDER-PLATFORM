@@ -1,8 +1,8 @@
-export const getToken = (): string | null => {
+export const getToken = () => {
   return localStorage.getItem('token');
 };
 
-export const isLoggedIn = (): boolean => {
+export const isLoggedIn = () => {
   return !!getToken();
 };
 

@@ -20,7 +20,7 @@ export default function Search() {
       <input type="text" value={query} onChange={e => setQuery(e.target.value)} className="border p-2 w-full mb-2" />
       <button onClick={handleSearch} className="bg-blue-600 text-white py-2 px-4 mb-4">Search</button>
       <ul>
-        {results.map((r: any) => (
+        {results.map((r) => (
           <li key={r.id} className="border p-2 mb-2">{r.name} - {r.industry}</li>
         ))}
       </ul>

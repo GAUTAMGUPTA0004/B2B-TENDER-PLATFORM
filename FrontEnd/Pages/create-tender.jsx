@@ -2,12 +2,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-interface Company {
-  id: string;
-  name: string;
-  industry: string;
-}
-
 export default function CreateTender() {
   const [form, setForm] = useState({ 
     title: '', 
@@ -16,7 +10,7 @@ export default function CreateTender() {
     budget: '',
     companyId: ''
   });
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -44,7 +38,7 @@ export default function CreateTender() {
     });
   }, [router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!form.companyId) {

@@ -1,11 +1,4 @@
-type CompanyProps = {
-  name: string;
-  industry: string;
-  description: string;
-  logoUrl?: string;
-};
-
-export default function CompanyCard({ name, industry, description, logoUrl }: CompanyProps) {
+export default function CompanyCard({ name, industry, description, logoUrl }) {
   return (
     <div className="border p-4 rounded shadow bg-white mb-4 flex items-start space-x-4">
       {logoUrl && <img src={logoUrl} alt={name} className="w-16 h-16 object-cover rounded" />}
@@ -17,3 +10,4 @@ export default function CompanyCard({ name, industry, description, logoUrl }: Co
     </div>
   );
 }
+
