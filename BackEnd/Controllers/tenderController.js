@@ -1,4 +1,5 @@
 const Tender = require('../Models/tenderModel');
+const Company = require('../Models/companyModel');
 
 const createTender = async (req, res) => {
   try {
@@ -9,11 +10,15 @@ const createTender = async (req, res) => {
       return res.status(401).json({ message: 'User not authenticated' });
     }
 
-    // Note: You might want to get the user's company ID instead of using user ID directly
-    // For now, assuming companyId should be the user's company
+    // Get the user's company first
+    const userCompany = await Company.findOne({ where: { userId: req.user.id } });
+    if (!userCompany) {
+      return res.status(400).json({ message: 'You must create a company first before posting tenders' });
+    }
+
     const tender = await Tender.create({ 
       ...req.body, 
-      companyId: req.user.id // Consider changing this logic if needed
+      companyId: userCompany.id // Use the actual company ID
     });
     
     console.log('Tender created successfully:', tender);
@@ -26,7 +31,17 @@ const createTender = async (req, res) => {
 
 const getTenders = async (req, res) => {
   try {
-    const tenders = await Tender.findAll();
+    const includeCompany = req.query.includeCompany === 'true';
+    
+    const options = includeCompany ? {
+      include: [{
+        model: Company,
+        as: 'company',
+        attributes: ['id', 'name', 'industry', 'logoUrl']
+      }]
+    } : {};
+
+    const tenders = await Tender.findAll(options);
     res.status(200).json(tenders);
   } catch (err) {
     console.error('Get tenders error:', err);

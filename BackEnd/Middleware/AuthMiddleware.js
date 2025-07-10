@@ -15,6 +15,5 @@ const authenticateToken = (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = {
-  authenticateToken
-};
+
+module.exports = authenticateToken;

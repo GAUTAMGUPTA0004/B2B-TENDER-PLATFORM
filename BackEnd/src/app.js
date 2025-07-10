@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('../config/passport');
+const path = require('path');
 require('dotenv').config();
 
 // Import associations to establish relationships
@@ -14,12 +15,16 @@ const companyRoutes = require('../Routes/company');
 const tenderRoutes = require('../Routes/tender');
 const applicationRoutes = require('../Routes/application');
 const searchRoutes = require('../Routes/search');
+const uploadRoutes = require('../Routes/upload');
 
 const app = express();
 
 // Middlewares
 app.use(cors());
 app.use(bodyParser.json());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Session configuration for Passport
 app.use(session({
@@ -42,6 +47,7 @@ app.use('/api/company', companyRoutes);
 app.use('/api/tender', tenderRoutes);
 app.use('/api/application', applicationRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');

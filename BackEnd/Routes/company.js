@@ -6,6 +6,6 @@ const router = express.Router();
 
 // Apply authentication middleware to company creation
 router.post('/', authenticateToken, createCompany);
-router.get('/', getCompanies);
+
 
 module.exports = router;
