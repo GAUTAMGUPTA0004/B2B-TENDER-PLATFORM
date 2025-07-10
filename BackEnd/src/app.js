@@ -1,9 +1,12 @@
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const session = require('express-session');
 const passport = require('../config/passport');
 require('dotenv').config();
 
 // Import associations to establish relationships
-// Import associations to establish relationships
-require('../Models/associations').default;
+require('../Models/associations');
 
 // Route imports
 const authRoutes = require('../Routes/auth');
