@@ -16,7 +16,7 @@ export default function CreateCompany() {
     const formData = new FormData();
     formData.append('logo', file);
     
-    const response = await axios.post('http://localhost:5000/api/upload', formData, {
+    const response = await axios.post('https://b2b-tender-platform-yngf.onrender.com/api/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -56,7 +56,7 @@ export default function CreateCompany() {
         logoUrl: logoUrl,
       };
 
-      await axios.post('http://localhost:5000/api/company', body, {
+      await axios.post('https://b2b-tender-platform-yngf.onrender.com/api/company', body, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

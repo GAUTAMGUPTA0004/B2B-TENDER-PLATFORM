@@ -22,7 +22,7 @@ export default function CreateTender() {
       return;
     }
 
-    axios.get('http://localhost:5000/api/company', {
+    axios.get('https://b2b-tender-platform-yngf.onrender.com/api/company', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => {
@@ -64,7 +64,7 @@ export default function CreateTender() {
         companyId: form.companyId
       };
 
-      await axios.post('http://localhost:5000/api/tender', tenderData, {
+      await axios.post('https://b2b-tender-platform-yngf.onrender.com/api/tender', tenderData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       

@@ -15,7 +15,7 @@ export default function Dashboard() {
       return;
     }
 
-    axios.get('http://localhost:5000/api/company', {
+    axios.get('https://b2b-tender-platform-yngf.onrender.com/api/company', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => {

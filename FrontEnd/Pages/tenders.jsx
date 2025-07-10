@@ -8,7 +8,7 @@ export default function Tenders() {
 
   useEffect(() => {
     // Fetch tenders with company information
-    axios.get('http://localhost:5000/api/tender?includeCompany=true')
+    axios.get('https://b2b-tender-platform-yngf.onrender.com/api/tender?includeCompany=true')
       .then(res => {
         setTenders(res.data);
         setLoading(false);
