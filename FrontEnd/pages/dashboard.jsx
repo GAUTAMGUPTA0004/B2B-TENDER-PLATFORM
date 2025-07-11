@@ -6,33 +6,59 @@ import CompanyCard from '../components/CompanyCard';
 export default function Dashboard() {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') return;
+    
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
       return;
     }
 
-    axios.get('https://b2b-tender-platform-yngf.onrender.com/api/company', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then(res => {
-      setCompanies(res.data);
-      setLoading(false);
-    })
-    .catch(err => {
-      console.error('Failed to load companies:', err);
-      alert('Failed to load companies');
-      setLoading(false);
-    });
+    const fetchCompanies = async () => {
+      try {
+        const res = await axios.get('https://b2b-tender-platform-yngf.onrender.com/api/company', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCompanies(res.data);
+      } catch (err) {
+        console.error('Failed to load companies:', err);
+        setError('Failed to load companies');
+        // If unauthorized, redirect to login
+        if (err.response?.status === 401) {
+          localStorage.removeItem('token');
+          router.push('/login');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
   }, [router]);
 
   if (loading) {
     return (
       <div className="p-8 text-center">
         <div className="text-lg">Loading companies...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 text-center">
+        <div className="text-red-600">{error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Retry
+        </button>
       </div>
     );
   }

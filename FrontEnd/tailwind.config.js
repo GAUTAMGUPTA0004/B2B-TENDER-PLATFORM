@@ -1,11 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './Pages/**/*.{js,jsx,mdx}',
-    './Components/**/*.{js,jsx,mdx}',
     './pages/**/*.{js,jsx,mdx}',
     './components/**/*.{js,jsx,mdx}',
     './app/**/*.{js,jsx,mdx}',
+    // Remove the uppercase versions as they don't match your actual folder structure
   ],
   theme: {
     extend: {},

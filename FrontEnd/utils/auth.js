@@ -1,5 +1,8 @@
 export const getToken = () => {
-  return localStorage.getItem('token');
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('token');
+  }
+  return null;
 };
 
 export const isLoggedIn = () => {
@@ -7,6 +10,8 @@ export const isLoggedIn = () => {
 };
 
 export const logout = () => {
-  localStorage.removeItem('token');
-  window.location.href = '/login';
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  }
 };
